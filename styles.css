@@ -1,0 +1,58 @@
+/* Estilos para el formulario de búsqueda */
+#searchForm {
+  margin-bottom: 20px;
+}
+
+/* Estilos para los resultados de productos */
+.card {
+  margin-bottom: 20px;
+}
+
+.card-img {
+  max-width: 100%;
+}
+
+/* Estilos para el modal de detalles */
+.modal-content {
+  border-radius: 0;
+}
+
+.modal-header {
+  border-bottom: none;
+}
+
+.modal-title {
+  font-size: 1.25rem;
+}
+
+.modal-body {
+  text-align: left;
+}
+
+/* Estilos para el botón "Ver Detalles" */
+.ver-detalle {
+  margin-top: 10px;
+}
+
+/* Estilos para el menú de selección (dropdown) */
+#ordenar {
+  max-width: 200px;
+  margin-top: 10px;
+}
+
+/* Estilos para la etiqueta "Ordenar por" */
+label[for="ordenar"] {
+  font-weight: bold;
+}
+
+/* Estilos para la etiqueta "Categoría" */
+label[for="categoria"] {
+  font-weight: bold;
+}
+
+/* Estilos para el contenedor de resultados */
+#resultados {
+  max-width: 800px;
+}
+
+/* Estilos adicionales (puedes añadir más según tus necesidades) */
