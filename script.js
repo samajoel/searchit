@@ -1,6 +1,6 @@
 $(document).ready(function () {
   // Cargar categorías
-  let productos;
+
   $.ajax({
     url: "https://telemedicina.jakemate.net:7141/api/webservice/metodo",
     data: {
@@ -45,9 +45,10 @@ $(document).ready(function () {
         Token: "NJKJNTL8SNKH5JJRTS32ZGSIIDPGHLU6KRXLQMLMJJU8MD7EY5TSWMGD2D6Z",
       },
       success: function (response) {
-        console.log(response);
         let productos = response.resultado.Table;
+        console.log(productos);
         mostrarResultados(productos);
+        mostrarResultadosModal(productos);
       },
     });
   });
@@ -78,46 +79,56 @@ $(document).ready(function () {
       resultadosDiv.append(productoHTML);
     });
   }
+  // Mostrar resultados Modal
+  function mostrarResultadosModal(productos) {
+    $("#resultados").on("click", ".ver-detalle", function () {
+      let productoId = $(this).data("id");
+      console.log(productoId);
+      var productoSeleccionado = productos.find(function (producto) {
+        return producto.COD_PRODUCTO_TIENDA === productoId;
+      });
 
-  // Abrir modal con detalles
-  $("#resultados").on("click", ".ver-detalle", function () {
-    let productoId = $(this).data("id");
-    console.log(productoId);
-
-    $.ajax({
-      url: "https://telemedicina.jakemate.net:7141/api/webservice/metodo",
-      data: {
-        _nombreMetodo_: "buscarProductosTienda",
-        CODIGO: productoId,
-      },
-      method: "POST",
-      headers: {
-        ApiKey: "ISSTIXZTV53RZURJKTZD3MXVMEW7X3",
-        Token: "NJKJNTL8SNKH5JJRTS32ZGSIIDPGHLU6KRXLQMLMJJU8MD7EY5TSWMGD2D6Z",
-      },
-      success: function (response) {
-        console.log(response);
-        let productos = response.resultado.Table;
-        var productoSeleccionado = productos.filter(function (producto) {
-          return producto.COD_PRODUCTO_TIENDA === productoId;
-        });
-
-        if (productoSeleccionado) {
-          let detalleHTML = `
-            <h5>${productoSeleccionado.NOMBRE}</h5>
-            <p>${productoSeleccionado.DESCRIPCION}</p>
-            <p>${productoSeleccionado.PRECIO} pesos</p>
-            <p>${productoSeleccionado.PRESENTACION}</p>
-            <p>${productoSeleccionado.CATEGORIA_PROD_TIENDA}</p>
-          `;
-          $("#detalleProductoBody").html(detalleHTML);
-          $("#detalleProductoModal").modal("show");
-        } else {
-          console.error("No se encontró el producto con ID:", productoId);
-        }
-      },
+      if (productoSeleccionado) {
+        let detalleHTML = `
+          <h5>${productoSeleccionado.NOMBRE}</h5>
+          <p>${productoSeleccionado.DESCRIPCION}</p>
+          <p>${productoSeleccionado.PRECIO} pesos</p>
+          <p>${productoSeleccionado.PRESENTACION}</p>
+          <p>${productoSeleccionado.CATEGORIA_PROD_TIENDA}</p>
+        `;
+        $("#detalleProductoBody").html(detalleHTML);
+        $("#detalleProductoModal").modal("show");
+      } else {
+        console.error("No se encontró el producto con ID:", productoId);
+      }
     });
-  });
+  }
+
+  function mostrarResultados(productos) {
+    let resultadosDiv = $("#resultados");
+    resultadosDiv.empty(); // Limpiar resultados previos
+
+    productos.forEach(function (producto) {
+      let productoHTML = `
+        <div class="card mb-3">
+          <div class="row no-gutters">
+            <div class="col-md-4">
+              <img src="${producto.IMAGEN}" class="card-img" alt="${producto.NOMBRE}">
+            </div>
+            <div class="col-md-8">
+              <div class="card-body">
+                <h5 class="card-title">${producto.NOMBRE}</h5>
+                <p class="card-text">${producto.PRECIO} pesos</p>
+                <p class="card-text">${producto.CATEGORIA_PROD_TIENDA}</p>
+                <a href="#" class="btn btn-primary ver-detalle" data-id="${producto.COD_PRODUCTO_TIENDA}">Ver Detalles</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+      resultadosDiv.append(productoHTML);
+    });
+  }
 
   // Manejar cambio de categoría
   $("#categoria").change(function () {
